@@ -10,6 +10,7 @@ module Parceira
       headers:            true,
       headers_included:   true,
       key_mapping:        nil,
+      file_encoding:      nil,
       # Values
       reject_blank:       true,
       reject_nil:         false,
