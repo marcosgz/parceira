@@ -199,6 +199,13 @@ describe Parceira::Reader do
       it { should eq([:field_1, :field_2, :field_3])}
     end
 
+    context "key_mapping" do
+      let(:values) { ['First Name', 'Last Name']}
+      it "overwrite header attributes" do
+        Parceira::Reader.new('', {key_mapping:{first_name: :first}}).send(:parse_header, values).should eq([:first, :last_name])
+        Parceira::Reader.new('', {key_mapping:{last_name: :last}}).send(:parse_header, values).should eq([:first_name, :last])
+      end
+    end
   end
 
   describe :process! do

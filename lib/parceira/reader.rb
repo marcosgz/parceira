@@ -9,6 +9,7 @@ module Parceira
       # Header
       headers:            true,
       headers_included:   true,
+      key_mapping:        nil,
       # Values
       reject_blank:       true,
       reject_nil:         false,
@@ -109,12 +110,14 @@ module Parceira
 
     def parse_header(arr)
       arr.flatten.each_with_index.inject([]) do |arr, (value, index)|
-        if (str=value.to_s.parameterize('_')).present?
-          arr << str.to_sym
-        else
-          arr << "field_#{index.next}".to_sym
-        end
-        arr
+        v = \
+          if (str=value.to_s.parameterize('_')).present?
+            str.to_sym
+          else
+            "field_#{index.next}".to_sym
+          end
+        v = options[:key_mapping][v] if options[:key_mapping].is_a?(Hash) && options[:key_mapping].has_key?(v)
+        arr.push(v)
       end
     end
 
