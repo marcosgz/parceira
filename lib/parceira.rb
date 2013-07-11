@@ -15,6 +15,11 @@ include ActiveSupport::Inflector
 
 module Parceira
   def self.process(input, options={}, &block)
-    Parceira::Reader.new(input, options.symbolize_keys, &block).process!
+    records = Parceira::Reader.new(input, options.symbolize_keys).process!
+    if block_given?
+      records.each{|record| block.call(record)}
+    else
+      records
+    end
   end
 end

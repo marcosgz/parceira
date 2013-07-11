@@ -21,7 +21,7 @@ module Parceira
     attr_reader :options
 
 
-    def initialize(input, options, &block)
+    def initialize(input, options)
       @input    = input
       @options  = DEFAULT_OPTIONS.merge(options)
     end

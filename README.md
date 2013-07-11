@@ -54,6 +54,14 @@ Product ID,Name,Price
 
 > Parceira.process(filename, headers: %w(ID Name Value))
 => [{"ID"=>1, "Name"=>"Macbook Air", "Value"=>999}, {"ID"=>2, "Name"=>"Ipad mini", "Value"=>329.99}, {"ID"=>3, "Name"=>"Iphone 5", "Value"=>199.0}, {"ID"=>4, "Name"=>"MacBook Pro", "Value"=>nil}]
+
+> Parceira.process(filename) do |data|
+*   puts data.inspect
+> end
+{:product_id=>1, :name=>"Macbook Air", :price=>999}
+{:product_id=>2, :name=>"Ipad mini", :price=>329.99}
+{:product_id=>3, :name=>"Iphone 5", :price=>199.0}
+{:product_id=>4, :name=>"MacBook Pro", :price=>nil}
 ```
 
 
