@@ -4,7 +4,7 @@ describe Parceira::Reader do
 
   describe :process! do
     describe "using default headers" do
-      let(:path) { File.expand_path('./../../../tmp/contacts-us-ascii.csv', __FILE__) }
+      let(:path) { File.expand_path('./../../../example/contacts-us-ascii.csv', __FILE__) }
       let(:expected) {
         [
           {:first_name=>"Marcos", :last_name=>"Zimmermann"},
@@ -25,7 +25,7 @@ describe Parceira::Reader do
     end
 
     describe "disable headers" do
-      let(:path) { File.expand_path('./../../../tmp/contacts-us-ascii.csv', __FILE__) }
+      let(:path) { File.expand_path('./../../../example/contacts-us-ascii.csv', __FILE__) }
       let(:options) { {headers: false} }
       let(:expected) {
         [
@@ -47,7 +47,7 @@ describe Parceira::Reader do
     end
 
     describe "overwriting headers" do
-      let(:path) { File.expand_path('./../../../tmp/contacts-us-ascii.csv', __FILE__) }
+      let(:path) { File.expand_path('./../../../example/contacts-us-ascii.csv', __FILE__) }
       let(:options) { {headers: ['First Name', 'Middle Name']} }
       let(:expected) {
         [
@@ -69,7 +69,7 @@ describe Parceira::Reader do
     end
 
     describe "include first row(Header)" do
-      let(:path) { File.expand_path('./../../../tmp/contacts-us-ascii.csv', __FILE__) }
+      let(:path) { File.expand_path('./../../../example/contacts-us-ascii.csv', __FILE__) }
       let(:options) { {headers_included: false, headers: false} }
       let(:expected) {
         [
@@ -206,7 +206,7 @@ describe Parceira::Reader do
   end
 
   describe :input_file do
-    let(:path) { File.expand_path('./../../../tmp/contacts-us-ascii.csv', __FILE__) }
+    let(:path) { File.expand_path('./../../../example/contacts-us-ascii.csv', __FILE__) }
     it { expect(File.exists?(path)).to be_true }
 
     context "intance of File" do
@@ -232,7 +232,7 @@ describe Parceira::Reader do
 
 
   describe :charset do
-    let(:path) { File.expand_path('./../../../tmp/contacts-us-ascii.csv', __FILE__) }
+    let(:path) { File.expand_path('./../../../example/contacts-us-ascii.csv', __FILE__) }
     it { expect(File.exists?(path)).to be_true }
 
     context ":file_encoding config" do
