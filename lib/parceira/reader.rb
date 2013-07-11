@@ -53,20 +53,26 @@ module Parceira
           header_data = input_file.readline.to_s.chomp(options[:row_sep]) if options[:headers_included] # Remove header row
           header_keys = \
             if options[:headers] == true
-              data = CSV.parse(header_data, self.csv_options)
-              self.parse_header( data )
+              begin
+                data = CSV.parse(header_data, self.csv_options)
+                self.parse_header( data )
+              rescue CSV::MalformedCSVError
+              end
             elsif options[:headers].is_a?(Array)
               options[:headers]
             end
 
           # now on to processing all the rest of the lines in the CSV file:
           while !input_file.eof?    # we can't use f.readlines() here, because this would read the whole file into memory at once, and eof => true
-            values = parse_values( CSV.parse(input_file.readline.chomp, csv_options) )
+            values =  begin
+                        parse_values( CSV.parse(input_file.readline.chomp, csv_options) )
+                      rescue CSV::MalformedCSVError
+                      end
             if header_keys
               output << convert_to_hash(header_keys, values)
             else
               output << values
-            end
+            end if values
           end
         ensure
           $/ = $/
