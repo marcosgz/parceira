@@ -7,6 +7,7 @@ Gem::Specification.new do |gem|
   gem.description   = %q{Importing of CSV Files as Array(s) of Hashes with featured to process large csv files and better support for file encoding.}
   gem.summary       = %q{Importing of CSV Files as Array(s) of Hashes}
   gem.homepage      = "http://github.com/marcosgz/parceira"
+  gem.license       = %q{MIT}
 
   gem.add_development_dependency "rspec"
   gem.add_development_dependency "guard-rspec"
