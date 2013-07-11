@@ -12,7 +12,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "guard-rspec"
 
   gem.add_dependency "i18n"
-  gem.add_dependency "active_support"
+  gem.add_dependency "activesupport", ">= 2.3.4"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
