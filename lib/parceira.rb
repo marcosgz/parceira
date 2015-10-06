@@ -11,8 +11,6 @@ require 'active_support/core_ext/string'
 require "parceira/version"
 require "parceira/reader"
 
-include ActiveSupport::Inflector
-
 module Parceira
   def self.process(input, options={}, &block)
     records = Parceira::Reader.new(input, options.symbolize_keys).process!
