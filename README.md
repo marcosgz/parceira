@@ -1,5 +1,6 @@
 parceira
 ========
+[![Build Status](https://travis-ci.com/marcosgz/parceira.svg?branch=master)](https://travis-ci.com/marcosgz/parceira)
 
 Importing of CSV Files as Array(s) of Hashes with featured to process large csv files and better support for file encoding.
 
