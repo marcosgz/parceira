@@ -1,274 +1,270 @@
-require "spec_helper"
+# frozen_string_literal: true
+
+require 'spec_helper'
 
 describe Parceira::Reader do
-
   describe :process! do
-    describe "using default headers" do
-      let(:path) { File.expand_path('./../../../example/contacts-us-ascii.csv', __FILE__) }
-      let(:expected) {
+    describe 'using default headers' do
+      let(:path) { File.expand_path('../../example/contacts-us-ascii.csv', __dir__) }
+      let(:expected) do
         [
-          {:first_name=>"Marcos", :last_name=>"Zimmermann"},
-          {:first_name=>"Paul", :last_name=>"Molive"},
-          {:first_name=>"Maya", :last_name=>"Didas"}
+          { first_name: 'Marcos', last_name: 'Zimmermann' },
+          { first_name: 'Paul', last_name: 'Molive' },
+          { first_name: 'Maya', last_name: 'Didas' }
         ]
-      }
+      end
 
-      context "from string" do
+      context 'from string' do
         subject { Parceira::Reader.new(File.read(path), {}).process! }
-        it { should eq(expected)}
+        it { should eq(expected) }
       end
 
-      context "from file" do
+      context 'from file' do
         subject { Parceira::Reader.new(path, {}).process! }
-        it { should eq(expected)}
+        it { should eq(expected) }
       end
     end
 
-    describe "disable headers" do
-      let(:path) { File.expand_path('./../../../example/contacts-us-ascii.csv', __FILE__) }
-      let(:options) { {headers: false} }
-      let(:expected) {
+    describe 'disable headers' do
+      let(:path) { File.expand_path('../../example/contacts-us-ascii.csv', __dir__) }
+      let(:options) { { headers: false } }
+      let(:expected) do
         [
-          ["Marcos", "Zimmermann"],
-          ["Paul", "Molive"],
-          ["Maya", "Didas"]
+          %w[Marcos Zimmermann],
+          %w[Paul Molive],
+          %w[Maya Didas]
         ]
-      }
-
-      context "from string" do
-        subject { Parceira::Reader.new(File.read(path), options).process! }
-        it { should eq(expected)}
       end
 
-      context "from file" do
+      context 'from string' do
+        subject { Parceira::Reader.new(File.read(path), options).process! }
+        it { should eq(expected) }
+      end
+
+      context 'from file' do
         subject { Parceira::Reader.new(path, options).process! }
-        it { should eq(expected)}
+        it { should eq(expected) }
       end
     end
 
-    describe "overwriting headers" do
-      let(:path) { File.expand_path('./../../../example/contacts-us-ascii.csv', __FILE__) }
-      let(:options) { {headers: ['First Name', 'Middle Name']} }
-      let(:expected) {
+    describe 'overwriting headers' do
+      let(:path) { File.expand_path('../../example/contacts-us-ascii.csv', __dir__) }
+      let(:options) { { headers: ['First Name', 'Middle Name'] } }
+      let(:expected) do
         [
-          {'First Name'=>"Marcos", 'Middle Name'=>"Zimmermann"},
-          {'First Name'=>"Paul", 'Middle Name'=>"Molive"},
-          {'First Name'=>"Maya", 'Middle Name'=>"Didas"}
+          { 'First Name' => 'Marcos', 'Middle Name' => 'Zimmermann' },
+          { 'First Name' => 'Paul', 'Middle Name' => 'Molive' },
+          { 'First Name' => 'Maya', 'Middle Name' => 'Didas' }
         ]
-      }
-
-      context "from string" do
-        subject { Parceira::Reader.new(File.read(path), options).process! }
-        it { should eq(expected)}
       end
 
-      context "from file" do
+      context 'from string' do
+        subject { Parceira::Reader.new(File.read(path), options).process! }
+        it { should eq(expected) }
+      end
+
+      context 'from file' do
         subject { Parceira::Reader.new(path, options).process! }
-        it { should eq(expected)}
+        it { should eq(expected) }
       end
     end
 
-    describe "include first row(Header)" do
-      let(:path) { File.expand_path('./../../../example/contacts-us-ascii.csv', __FILE__) }
-      let(:options) { {headers_included: false, headers: false} }
-      let(:expected) {
+    describe 'include first row(Header)' do
+      let(:path) { File.expand_path('../../example/contacts-us-ascii.csv', __dir__) }
+      let(:options) { { headers_included: false, headers: false } }
+      let(:expected) do
         [
-          ["First Name", "Last Name"],
-          ["Marcos", "Zimmermann"],
-          ["Paul", "Molive"],
-          ["Maya", "Didas"]
+          ['First Name', 'Last Name'],
+          %w[Marcos Zimmermann],
+          %w[Paul Molive],
+          %w[Maya Didas]
         ]
-      }
-
-      context "from string" do
-        subject { Parceira::Reader.new(File.read(path), options).process! }
-        it { should eq(expected)}
       end
 
-      context "from file" do
+      context 'from string' do
+        subject { Parceira::Reader.new(File.read(path), options).process! }
+        it { should eq(expected) }
+      end
+
+      context 'from file' do
         subject { Parceira::Reader.new(path, options).process! }
-        it { should eq(expected)}
+        it { should eq(expected) }
       end
     end
   end
-
 
   describe :convert_to_hash do
-    let(:header) { [:foo, :bar] }
-    context "reject nil values" do
-      let(:values) { ["Foo", nil] }
-      subject { Parceira::Reader.new('', {reject_nil: true}).send(:convert_to_hash, header, values) }
-      it { should eq({foo:"Foo"})}
+    let(:header) { %i[foo bar] }
+    context 'reject nil values' do
+      let(:values) { ['Foo', nil] }
+      subject { Parceira::Reader.new('', reject_nil: true).send(:convert_to_hash, header, values) }
+      it { should eq(foo: 'Foo') }
     end
 
-    context "allow nil values" do
-      let(:values) { ["Foo", nil] }
-      subject { Parceira::Reader.new('', {reject_nil: false}).send(:convert_to_hash, header, values) }
-      it { should eq({foo:"Foo",bar:nil})}
+    context 'allow nil values' do
+      let(:values) { ['Foo', nil] }
+      subject { Parceira::Reader.new('', reject_nil: false).send(:convert_to_hash, header, values) }
+      it { should eq(foo: 'Foo', bar: nil) }
     end
   end
 
-
   describe :parse_values do
-    it "should strip values" do
-      expect(Parceira::Reader.new('', {reject_blank: false}).send(:parse_values, ['Foo ', nil, ' Bar', ' ', 'Age'])).to eq(["Foo", "", "Bar", "", "Age"])
+    it 'should strip values' do
+      expect(Parceira::Reader.new('', reject_blank: false).send(:parse_values, ['Foo ', nil, ' Bar', ' ', 'Age'])).to eq(['Foo', '', 'Bar', '', 'Age'])
     end
 
-    describe "convert_to_numeric true" do
-      subject { Parceira::Reader.new('', {convert_to_numeric: true}).send(:parse_values, values) }
-      context "Fixnum" do
-        let(:values) { ['Foo', '1', 'Bar'] }
-        it { should eq(["Foo", 1, "Bar"])}
+    describe 'convert_to_numeric true' do
+      subject { Parceira::Reader.new('', convert_to_numeric: true).send(:parse_values, values) }
+      context 'Fixnum' do
+        let(:values) { %w[Foo 1 Bar] }
+        it { should eq(['Foo', 1, 'Bar']) }
       end
 
-      context "Negative Fixnum" do
+      context 'Negative Fixnum' do
         let(:values) { ['Foo', '-1', 'Bar'] }
-        it { should eq(["Foo", -1, "Bar"])}
+        it { should eq(['Foo', -1, 'Bar']) }
       end
 
-      context "Positive Fixnum" do
+      context 'Positive Fixnum' do
         let(:values) { ['Foo', '+1', 'Bar'] }
-        it { should eq(["Foo", 1, "Bar"])}
+        it { should eq(['Foo', 1, 'Bar']) }
       end
 
-      context "Float" do
+      context 'Float' do
         let(:values) { ['Foo', '1.23', 'Bar'] }
-        it { should eq(["Foo", 1.23, "Bar"])}
+        it { should eq(['Foo', 1.23, 'Bar']) }
       end
 
-      context "Negative Float" do
+      context 'Negative Float' do
         let(:values) { ['Foo', '-1.23', 'Bar'] }
-        it { should eq(["Foo", -1.23, "Bar"])}
+        it { should eq(['Foo', -1.23, 'Bar']) }
       end
 
-      context "Positive Float" do
+      context 'Positive Float' do
         let(:values) { ['Foo', '+1.23', 'Bar'] }
-        it { should eq(["Foo", 1.23, "Bar"])}
+        it { should eq(['Foo', 1.23, 'Bar']) }
       end
     end
 
-    describe "reject_blank" do
-      context "true" do
-        subject { Parceira::Reader.new('', {reject_blank: true}).send(:parse_values, ['Foo', '', 'Bar']) }
-        it { should eq(["Foo", nil, "Bar"])}
+    describe 'reject_blank' do
+      context 'true' do
+        subject { Parceira::Reader.new('', reject_blank: true).send(:parse_values, ['Foo', '', 'Bar']) }
+        it { should eq(['Foo', nil, 'Bar']) }
       end
 
-      context "false" do
-        subject { Parceira::Reader.new('', {reject_blank: false}).send(:parse_values, ['Foo', '', 'Bar']) }
-        it { should eq(["Foo", '', "Bar"])}
+      context 'false' do
+        subject { Parceira::Reader.new('', reject_blank: false).send(:parse_values, ['Foo', '', 'Bar']) }
+        it { should eq(['Foo', '', 'Bar']) }
       end
     end
 
-    describe "reject_zero" do
-      context "true" do
-        subject { Parceira::Reader.new('', {reject_zero: true}).send(:parse_values, ['Foo', '0', 'Bar', '0.0']) }
-        it { should eq(["Foo", nil, "Bar", nil])}
+    describe 'reject_zero' do
+      context 'true' do
+        subject { Parceira::Reader.new('', reject_zero: true).send(:parse_values, ['Foo', '0', 'Bar', '0.0']) }
+        it { should eq(['Foo', nil, 'Bar', nil]) }
       end
-      context "false" do
-        subject { Parceira::Reader.new('', {reject_zero: false}).send(:parse_values, ['Foo', '0', 'Bar', '0.0']) }
-        it { should eq(["Foo", 0, "Bar", 0.0])}
+      context 'false' do
+        subject { Parceira::Reader.new('', reject_zero: false).send(:parse_values, ['Foo', '0', 'Bar', '0.0']) }
+        it { should eq(['Foo', 0, 'Bar', 0.0]) }
       end
     end
 
-    describe "reject_matching" do
-      context "match with /^B/" do
-        subject { Parceira::Reader.new('', {reject_matching: /^B/}).send(:parse_values, ['Foo', 'Bar']) }
-        it { should eq(["Foo", nil])}
+    describe 'reject_matching' do
+      context 'match with /^B/' do
+        subject { Parceira::Reader.new('', reject_matching: /^B/).send(:parse_values, %w[Foo Bar]) }
+        it { should eq(['Foo', nil]) }
       end
-      context "nil" do
-        subject { Parceira::Reader.new('', {reject_matching: nil}).send(:parse_values, ['Foo', 'Bar']) }
-        it { should eq(["Foo", "Bar"])}
+      context 'nil' do
+        subject { Parceira::Reader.new('', reject_matching: nil).send(:parse_values, %w[Foo Bar]) }
+        it { should eq(%w[Foo Bar]) }
       end
     end
   end
 
   describe :parse_header do
     subject { Parceira::Reader.new('', {}).send(:parse_header, values) }
-    context "with whitespace character" do
-      let(:values) { ['First Name', 'Last Name', 'Age']}
-      it { should eq([:first_name, :last_name, :age])}
+    context 'with whitespace character' do
+      let(:values) { ['First Name', 'Last Name', 'Age'] }
+      it { should eq(%i[first_name last_name age]) }
     end
 
-    context "one missing key" do
-      let(:values) { ['First Name', nil, 'Age']}
-      it { should eq([:first_name, :field_2, :age])}
+    context 'one missing key' do
+      let(:values) { ['First Name', nil, 'Age'] }
+      it { should eq(%i[first_name field_2 age]) }
     end
 
-    context "missing values" do
-      let(:values) { ['', nil, '']}
-      it { should eq([:field_1, :field_2, :field_3])}
+    context 'missing values' do
+      let(:values) { ['', nil, ''] }
+      it { should eq(%i[field_1 field_2 field_3]) }
     end
 
-    context "key_mapping" do
-      let(:values) { ['First Name', 'Last Name']}
-      it "overwrite header attributes" do
-        Parceira::Reader.new('', {key_mapping:{first_name: :first}}).send(:parse_header, values).should eq([:first, :last_name])
-        Parceira::Reader.new('', {key_mapping:{last_name: :last}}).send(:parse_header, values).should eq([:first_name, :last])
+    context 'key_mapping' do
+      let(:values) { ['First Name', 'Last Name'] }
+      it 'overwrite header attributes' do
+        Parceira::Reader.new('', key_mapping: { first_name: :first }).send(:parse_header, values).should eq(%i[first last_name])
+        Parceira::Reader.new('', key_mapping: { last_name: :last }).send(:parse_header, values).should eq(%i[first_name last])
       end
     end
   end
 
   describe :process! do
-
   end
 
   describe :input_file do
-    let(:path) { File.expand_path('./../../../example/contacts-us-ascii.csv', __FILE__) }
-    it { expect(File.exists?(path)).to be true }
+    let(:path) { File.expand_path('../../example/contacts-us-ascii.csv', __dir__) }
+    it { expect(File.exist?(path)).to be true }
 
-    context "intance of File" do
+    context 'intance of File' do
       let(:file) { File.open(path) }
       subject { Parceira::Reader.new(file, {}).send(:input_file) }
-      it { should eq(file)}
+      it { should eq(file) }
     end
 
-    context "filename" do
+    context 'filename' do
       let(:file) { double('File') }
       before(:each) do
         File.should_receive(:open).with(path, 'r:us-ascii').and_return(file)
       end
       subject { Parceira::Reader.new(path, {}).send(:input_file) }
-      it { should eq(file)}
+      it { should eq(file) }
     end
 
-    context "csv string" do
+    context 'csv string' do
       subject { Parceira::Reader.new('foo,bar', {}).send(:input_file) }
-      it { should be_nil}
+      it { should be_nil }
     end
   end
 
-
   describe :charset do
-    let(:path) { File.expand_path('./../../../example/contacts-us-ascii.csv', __FILE__) }
-    it { expect(File.exists?(path)).to be true }
+    let(:path) { File.expand_path('../../example/contacts-us-ascii.csv', __dir__) }
+    it { expect(File.exist?(path)).to be true }
 
-    context ":file_encoding config" do
-      subject { Parceira::Reader.new(path, {file_encoding: 'iso-8859-1'}).send(:charset) }
-      it { should eq('iso-8859-1')}
+    context ':file_encoding config' do
+      subject { Parceira::Reader.new(path, file_encoding: 'iso-8859-1').send(:charset) }
+      it { should eq('iso-8859-1') }
     end
 
-    context "instance of File" do
+    context 'instance of File' do
       subject { Parceira::Reader.new(File.open(path), {}).send(:charset) }
-      it { should eq('us-ascii')}
+      it { should eq('us-ascii') }
     end
 
-    context "filename" do
+    context 'filename' do
       subject { Parceira::Reader.new(path, {}).send(:charset) }
-      it { should eq('us-ascii')}
+      it { should eq('us-ascii') }
     end
 
-    context "csv string" do
+    context 'csv string' do
       subject { Parceira::Reader.new("name,age\nFoo Bar,25", {}).send(:charset) }
-      it "returns default_charset value" do
+      it 'returns default_charset value' do
         should eq('utf-8')
       end
     end
   end
 
-
   describe :csv_options do
     subject { Parceira::Reader.new('', {}).send(:csv_options) }
-    it "includes only options allowed on CSV.parse method" do
+    it 'includes only options allowed on CSV.parse method' do
       should have_key(:col_sep)
       should have_key(:row_sep)
       should have_key(:quote_char)
@@ -280,12 +276,10 @@ describe Parceira::Reader do
     end
   end
 
-
   describe :default_charset do
     subject { Parceira::Reader.new('/tmp/path', {}).send(:default_charset) }
-    it { should eq('utf-8')}
+    it { should eq('utf-8') }
   end
-
 
   it { expect(Parceira::Reader).to be_const_defined('DEFAULT_OPTIONS') }
 end
