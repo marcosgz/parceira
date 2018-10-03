@@ -118,7 +118,7 @@ module Parceira
     def parse_header(arr)
       arr.flatten.each_with_index.inject([]) do |arr, (value, index)|
         v = \
-          if (str=value.to_s.parameterize('_')).present?
+          if (str=value.to_s.downcase.gsub(/[^a-z0-9\-]+/, '_').gsub(/^(_)+|(_)+$/, '')).present?
             str.to_sym
           else
             "field_#{index.next}".to_sym

@@ -214,7 +214,7 @@ describe Parceira::Reader do
 
   describe :input_file do
     let(:path) { File.expand_path('./../../../example/contacts-us-ascii.csv', __FILE__) }
-    it { expect(File.exists?(path)).to be_true }
+    it { expect(File.exists?(path)).to be true }
 
     context "intance of File" do
       let(:file) { File.open(path) }
@@ -240,7 +240,7 @@ describe Parceira::Reader do
 
   describe :charset do
     let(:path) { File.expand_path('./../../../example/contacts-us-ascii.csv', __FILE__) }
-    it { expect(File.exists?(path)).to be_true }
+    it { expect(File.exists?(path)).to be true }
 
     context ":file_encoding config" do
       subject { Parceira::Reader.new(path, {file_encoding: 'iso-8859-1'}).send(:charset) }
